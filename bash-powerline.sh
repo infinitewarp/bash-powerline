@@ -6,6 +6,7 @@ __powerline() {
     readonly PS_SYMBOL_DARWIN=''
     readonly PS_SYMBOL_LINUX='$'
     readonly PS_SYMBOL_OTHER='%'
+    readonly PYTHON_VENV_SYMBOL='⚕'
     readonly GIT_BRANCH_SYMBOL='⑂ '
     readonly GIT_BRANCH_CHANGED_SYMBOL='+'
     readonly GIT_NEED_PUSH_SYMBOL='⇡'
@@ -90,6 +91,13 @@ __powerline() {
         printf " $GIT_BRANCH_SYMBOL$branch$marks "
     }
 
+    __venv_info() {
+
+        [ -n "$VIRTUAL_ENV" ] || return  # virtual env not found
+        local VENV="${VIRTUAL_ENV##*/}"  # strip out the path and just leave the env name
+        printf " $PYTHON_VENV_SYMBOL$VENV "
+    }
+
     ps1() {
         # Check the exit code of the previous command and display different
         # colors in the prompt accordingly. 
@@ -103,6 +111,7 @@ __powerline() {
         PS1+="$BG_YELLOW$FG_WHITE \h $RESET"
         PS1+="$BG_GREY$FG_BASE3 \w $RESET"
         PS1+="$BG_BLUE$FG_BASE3$(__git_info)$RESET"
+        PS1+="$BG_MAGENTA$FG_WHITE$(__venv_info)$RESET"
         PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET "
     }
 
